@@ -1,0 +1,25 @@
+# Ignore dependencies
+**/node_modules/
+
+# Ignore environment files
+**/.env
+
+# Ignore build folders
+**/dist
+**/build
+
+# Logs
+*.log
+
+# Python
+__pycache__/
+*.pyc
+venv/
+.venv/
+
+# VS Code
+.vscode/
+
+# OS files
+.DS_Store
+Thumbs.db
