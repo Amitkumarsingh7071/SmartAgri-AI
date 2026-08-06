@@ -18,6 +18,7 @@ venv/
 .venv/
 v/
 *.keras
+*.onnx
 
 # VS Code
 .vscode/
