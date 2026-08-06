@@ -47,9 +47,9 @@ const DiseaseDetectUpload = () => {
       <div className="lg:col-span-5 glass-panel p-6 rounded-3xl border border-gray-200/50 dark:border-gray-800/30">
         <h3 className="font-extrabold text-lg mb-1 flex items-center gap-2">
           <Upload className="h-5 w-5 text-green-500" />
-          Plant Disease Diagnosis
+          Multi-Crop Leaf Diagnostics
         </h3>
-        <p className="text-xs text-gray-500 mb-6">Upload a clear photo of an infected leaf to diagnose pathogen symptoms and view treatments.</p>
+        <p className="text-xs text-gray-500 mb-6">Upload a clear photo of an infected crop leaf (Tomato, Potato, Corn, Apple, Grape, Pepper, Strawberry, Orange, Peach, Cherry, Blueberry, etc.) to analyze pathogen symptoms and view ML treatments.</p>
 
         <form onSubmit={handleUpload} className="space-y-4">
           {/* Preview Box */}
@@ -58,9 +58,9 @@ const DiseaseDetectUpload = () => {
               <img src={previewUrl} alt="Leaf preview" className="w-full h-full object-cover" />
             ) : (
               <div className="flex flex-col items-center p-6 text-center">
-                <Upload className="h-10 w-10 text-gray-400 mb-3" />
+                <Upload className="h-10 w-10 text-gray-450 mb-3" />
                 <span className="text-xs font-semibold text-gray-600 dark:text-gray-400">Click or Drag Leaf Image</span>
-                <span className="text-[10px] text-gray-400 mt-1">Supports PNG, JPG (Max 5MB)</span>
+                <span className="text-[10px] text-gray-400 mt-1">Supports 14+ Crops & 38 Disease Profiles</span>
               </div>
             )}
             <input
@@ -153,8 +153,8 @@ const DiseaseDetectUpload = () => {
             <div className="p-4 rounded-full bg-gray-100 dark:bg-gray-800/50 text-gray-400 mb-4 animate-pulse">
               <AlertTriangle className="h-8 w-8" />
             </div>
-            <h4 className="font-bold text-sm text-gray-400">Awaiting Diagnoses Photo</h4>
-            <p className="text-[11px] text-gray-500 mt-1 max-w-[240px]">Upload a photo of crop foliage leaf spots to generate diagnostic treatments and advice.</p>
+            <h4 className="font-bold text-sm text-gray-400">Awaiting Diagnostics Photo</h4>
+            <p className="text-[11px] text-gray-500 mt-1 max-w-[240px]">Upload a photo of crop foliage leaf spots to generate ML diagnostic treatments and advice.</p>
           </div>
         )}
       </div>

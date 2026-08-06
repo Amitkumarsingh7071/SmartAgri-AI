@@ -16,6 +16,8 @@ __pycache__/
 *.pyc
 venv/
 .venv/
+v/
+*.keras
 
 # VS Code
 .vscode/

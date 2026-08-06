@@ -9,7 +9,8 @@ from typing import List, Optional
 
 # Import models
 from models.crop_recommender import get_crop_recommendation
-from models.fertilizer_recommender import recommend_fertilizer
+from models.fertilizer_recommender import get_fertilizer_recommendation
+from models.disease_detector import predict_leaf_disease
 
 app = FastAPI(title="Smart Agriculture AI Microservice")
 
@@ -67,92 +68,19 @@ def get_crop_rec(req: CropRequest):
 @app.post("/api/recommend-fertilizer")
 def get_fert_rec(req: FertilizerRequest):
     try:
-        result = recommend_fertilizer(
+        result = get_fertilizer_recommendation(
             req.crop_name, req.N, req.P, req.K, req.pH, req.moisture
         )
         return result
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-# 3. Plant Disease Detection (Deterministic image classifier based on file hash)
+# 3. Plant Disease Detection (Random Forest Leaf Classifier)
 @app.post("/api/detect-disease")
 async def detect_leaf_disease(image: UploadFile = File(...)):
     try:
         contents = await image.read()
-        
-        # Generate hash of image contents to seed random generation
-        # This makes the predictions completely deterministic per image file!
-        file_hash = hashlib.md5(contents).hexdigest()
-        seed = int(file_hash, 16) % 1000
-        random.seed(seed)
-        
-        diseases = [
-            {
-                "disease_name": "Rice Blast (Magnaporthe oryzae)",
-                "confidence": round(82.0 + random.uniform(0, 15), 1),
-                "causes": "Excessive nitrogen fertilizer application, prolonged leaf wetness, and relative humidity above 90%.",
-                "treatment": {
-                    "organic": "Foliar spray of Pseudomonas fluorescens (organic bio-fungicide) at 10g/liter or neem oil formulation.",
-                    "chemical": "Spray Tricyclazole 75 WP at 0.6g/liter of water or Carbendazim."
-                },
-                "preventive_measures": "Avoid excess nitrogen, maintain optimal seedling spacing, and use disease-resistant seeds."
-            },
-            {
-                "disease_name": "Wheat Leaf Rust (Puccinia triticina)",
-                "confidence": round(82.0 + random.uniform(0, 15), 1),
-                "causes": "High humidity, mild temperatures (15°C to 22°C), and windborne spores spreading from neighboring fields.",
-                "treatment": {
-                    "organic": "Spray home-made baking soda solution (1 tbsp baking soda, 1 tsp liquid soap, 1 gallon water) or copper-based soaps.",
-                    "chemical": "Spray Propiconazole 25 EC at 1 ml/liter of water or Tebuconazole fungicide."
-                },
-                "preventive_measures": "Sow early in the season, use rust-resistant cultivars, and rotate crops with non-cereal varieties."
-            },
-            {
-                "disease_name": "Tomato Early Blight (Alternaria solani)",
-                "confidence": round(82.0 + random.uniform(0, 15), 1),
-                "causes": "Fungal pathogen thriving in wet weather, heavy dew, and high temperatures (24°C to 29°C).",
-                "treatment": {
-                    "organic": "Foliar spray of Bacillus subtilis or Copper Fungicide. Remove lower infected foliage immediately.",
-                    "chemical": "Spray Chlorothalonil or Mancozeb fungicide according to package dosage."
-                },
-                "preventive_measures": "Practice crop rotation (avoid planting solanaceous crops consecutively), apply mulching to block soil spores, and irrigate at the soil level using drip systems."
-            },
-            {
-                "disease_name": "Cotton Bacterial Blight (Xanthomonas)",
-                "confidence": round(82.0 + random.uniform(0, 15), 1),
-                "causes": "Seedborne bacteria triggered by warm temperatures, high humidity, and splashing rain.",
-                "treatment": {
-                    "organic": "Spray copper oxychloride 50 WP combined with fresh neem seed kernel extract.",
-                    "chemical": "Spray Streptocycline (100 ppm) combined with Copper Oxychloride (0.3%) at 15-day intervals."
-                },
-                "preventive_measures": "Use certified acid-delinted seeds, destroy post-harvest debris, and maintain clean cultivation."
-            },
-            {
-                "disease_name": "Healthy Leaf (No Pathogens Detected)",
-                "confidence": round(95.0 + random.uniform(0, 4.9), 1),
-                "causes": "Optimal nutrition, clean cultivation, and balanced moisture control.",
-                "treatment": {
-                    "organic": "No treatment required. Maintain regular compost feedings.",
-                    "chemical": "None. Avoid preventative spraying to preserve beneficial insects."
-                },
-                "preventive_measures": "Continue crop monitoring, maintain regular NPK fertilization, and water consistently."
-            }
-        ]
-        
-        # Select disease based on random seed
-        result = random.choice(diseases)
-        
-        # Override for specific filenames if users upload standard examples
-        filename_lower = image.filename.lower()
-        if "rust" in filename_lower:
-            result = diseases[1]
-        elif "blight" in filename_lower:
-            result = diseases[2] if "tomato" in filename_lower else diseases[3]
-        elif "blast" in filename_lower:
-            result = diseases[0]
-        elif "healthy" in filename_lower:
-            result = diseases[4]
-            
+        result = predict_leaf_disease(contents)
         return result
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

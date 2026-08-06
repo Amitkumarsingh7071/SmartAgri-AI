@@ -18,7 +18,7 @@ def generate_dataset():
     }
     
     for crop, r in ranges.items():
-        for _ in range(150): // 150 samples per crop
+        for _ in range(150): # 150 samples per crop
             N = random.uniform(r[0], r[1])
             P = random.uniform(r[2], r[3])
             K = random.uniform(r[4], r[5])
