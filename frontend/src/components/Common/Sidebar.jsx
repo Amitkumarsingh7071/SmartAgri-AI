@@ -1,6 +1,7 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
+import { useLanguage } from '../../contexts/LanguageContext';
 import {
   LayoutDashboard,
   Map,
@@ -16,20 +17,21 @@ import {
 
 const Sidebar = ({ isOpen, onClose }) => {
   const { user } = useAuth();
+  const { t } = useLanguage();
 
   const links = [
-    { name: 'Dashboard', path: '/', icon: LayoutDashboard },
-    { name: 'Farms Map', path: '/farms', icon: Map },
-    { name: 'Crops Log', path: '/crops', icon: Sprout },
-    { name: 'Soil Health', path: '/soil', icon: HeartPulse },
-    { name: 'Expenses', path: '/finance', icon: TrendingUp },
-    { name: 'Government Schemes', path: '/schemes', icon: Award },
-    { name: 'AI Studio', path: '/ai-studio', icon: Cpu },
-    { name: 'Profile ID Badge', path: '/profile', icon: User },
+    { name: t('menu.dashboard'), path: '/', icon: LayoutDashboard },
+    { name: t('menu.farms'), path: '/farms', icon: Map },
+    { name: t('menu.crops'), path: '/crops', icon: Sprout },
+    { name: t('menu.soilHealth'), path: '/soil', icon: HeartPulse },
+    { name: t('menu.finance'), path: '/finance', icon: TrendingUp },
+    { name: t('menu.schemes'), path: '/schemes', icon: Award },
+    { name: t('menu.aiStudio'), path: '/ai-studio', icon: Cpu },
+    { name: t('menu.profile'), path: '/profile', icon: User },
   ];
 
   if (user && user.role === 'admin') {
-    links.push({ name: 'Admin Control', path: '/admin', icon: Shield });
+    links.push({ name: t('menu.admin'), path: '/admin', icon: Shield });
   }
 
   const activeStyle = "flex items-center gap-3 px-4 py-3 bg-gradient-to-r from-green-500/20 to-emerald-500/10 text-green-700 dark:text-green-400 border-l-4 border-green-500 font-semibold rounded-r-xl transition-all duration-200";

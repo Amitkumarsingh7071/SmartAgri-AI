@@ -2,10 +2,12 @@ import React, { useState } from 'react';
 import CropRecommendForm from '../components/AI/CropRecommendForm';
 import DiseaseDetectUpload from '../components/AI/DiseaseDetectUpload';
 import ChatBot from '../components/AI/ChatBot';
+import { useLanguage } from '../contexts/LanguageContext';
 import { Cpu, Sprout, Leaf, MessageCircle, HelpCircle, AlertCircle, ArrowRight } from 'lucide-react';
 import axios from 'axios';
 
 const AIStudio = () => {
+  const { t } = useLanguage();
   const [activeTab, setActiveTab] = useState('crop');
 
   // Fertilizer Recommendation Form State
@@ -51,10 +53,10 @@ const AIStudio = () => {
   };
 
   const tabs = [
-    { id: 'crop', label: 'Crop Suitability', icon: Sprout },
-    { id: 'fertilizer', label: 'Fertilizer Advisor', icon: Cpu },
-    { id: 'disease', label: 'Disease Diagnostics', icon: Leaf },
-    { id: 'chatbot', label: 'Krishi AI Chat', icon: MessageCircle }
+    { id: 'crop', label: t('ai.tabCrop'), icon: Sprout },
+    { id: 'fertilizer', label: t('ai.tabFertilizer'), icon: Cpu },
+    { id: 'disease', label: t('ai.tabDisease'), icon: Leaf },
+    { id: 'chatbot', label: t('ai.tabChat'), icon: MessageCircle }
   ];
 
   return (
@@ -63,9 +65,9 @@ const AIStudio = () => {
       <div>
         <h2 className="text-xl font-extrabold flex items-center gap-2">
           <Cpu className="h-5.5 w-5.5 text-green-500" />
-          Agronomy AI Decision Studio
+          {t('ai.title')}
         </h2>
-        <p className="text-xs text-gray-500">Access artificial intelligence machine learning models for soil recommendations and disease analysis.</p>
+        <p className="text-xs text-gray-500">{t('ai.subtitle')}</p>
       </div>
 
       {/* Tabs list */}

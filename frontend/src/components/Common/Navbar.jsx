@@ -1,12 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
+import { useLanguage } from '../../contexts/LanguageContext';
 import ThemeToggle from './ThemeToggle';
+import LanguageToggle from './LanguageToggle';
 import { Bell, User, LogOut, Shield, Settings, Menu, CloudSun } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import API from '../../services/api';
 
 const Navbar = ({ onMenuClick }) => {
   const { user, logout } = useAuth();
+  const { t } = useLanguage();
   const [notifications, setNotifications] = useState([]);
   const [showNotifications, setShowNotifications] = useState(false);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
@@ -86,13 +89,13 @@ const Navbar = ({ onMenuClick }) => {
             <CloudSun className="h-5 w-5" />
           </div>
           <span className="font-bold text-lg bg-gradient-to-r from-green-600 to-emerald-500 dark:from-green-400 dark:to-emerald-300 bg-clip-text text-transparent hidden sm:inline-block">
-            SmartAgri AI
+            {t('appName')}
           </span>
         </Link>
       </div>
 
       {/* Right Side Controls */}
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-3 md:gap-4">
         {/* Weather Snippet */}
         {weatherSnippet && user && user.profile && (
           <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-green-50/50 dark:bg-green-950/20 text-green-700 dark:text-green-400 text-xs font-semibold border border-green-100/50 dark:border-green-900/30">
@@ -101,6 +104,7 @@ const Navbar = ({ onMenuClick }) => {
           </div>
         )}
 
+        <LanguageToggle />
         <ThemeToggle />
 
         {/* Notifications Dropdown */}
