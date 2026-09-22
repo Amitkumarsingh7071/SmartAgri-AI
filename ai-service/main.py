@@ -163,6 +163,109 @@ async def chat_assistant(req: ChatRequest):
 
     return {"response": response}
 
+class VoiceRequest(BaseModel):
+    query: str
+    lang: Optional[str] = "en"
+    crop_name: Optional[str] = "Tomato"
+    crop_age_days: Optional[int] = 45
+    farm_area: Optional[float] = 2.0
+
+class PricePredictRequest(BaseModel):
+    crop_name: str
+
+class NdviRequest(BaseModel):
+    lat: Optional[float] = 28.6139
+    lon: Optional[float] = 77.2090
+    crop_name: Optional[str] = "Tomato"
+
+@app.post("/api/ndvi-analyzer")
+def analyze_ndvi_satellite(req: NdviRequest):
+    ndvi_score = round(random.uniform(0.62, 0.76), 2)
+    vigor_pct = int(ndvi_score * 100)
+    
+    return {
+        "success": True,
+        "lat": req.lat,
+        "lon": req.lon,
+        "crop_name": req.crop_name,
+        "ndvi_score": ndvi_score,
+        "vigor_percentage": f"{vigor_pct}%",
+        "water_stress_index": "Low Risk",
+        "health_status": "HEALTHY_CANOPY",
+        "grid_zones": [
+            {"zone": "North Sector", "ndvi": round(ndvi_score + 0.05, 2), "status": "Optimal Vigor", "color": "#10B981"},
+            {"zone": "Center Sector", "ndvi": ndvi_score, "status": "Healthy Canopy", "color": "#3B82F6"},
+            {"zone": "South Sector", "ndvi": round(ndvi_score - 0.12, 2), "status": "Moderate Moisture Stress", "color": "#F59E0B"}
+        ]
+    }
+
+@app.post("/api/predict-price-trend")
+def predict_price_trend(req: PricePredictRequest):
+    crop = req.crop_name.lower()
+    base_price = 2800.0 if "tomato" in crop else (2250.0 if "wheat" in crop else (6200.0 if "cotton" in crop else 2100.0))
+    
+    # Generate 30-day forecasting curve
+    points = []
+    current = base_price
+    peak_day = 12
+    peak_price = base_price * 1.18
+    
+    for day in range(1, 31):
+        if day <= peak_day:
+            current += random.uniform(15, 35)
+        else:
+            current -= random.uniform(10, 25)
+            
+        points.append({
+            "day": f"Day {day}",
+            "price": round(current, 1)
+        })
+        
+    return {
+        "success": True,
+        "crop_name": req.crop_name,
+        "current_price": base_price,
+        "expected_peak_price": round(peak_price, 1),
+        "best_sell_day": f"Day {peak_day}",
+        "trend_direction": "RISING_PEAK",
+        "recommendation": f"Market Analysis: Prices for {req.crop_name} are projected to rise over the next 12 days before leveling off. Consider holding harvest for 10-14 days to maximize profit.",
+        "forecast_30d": points
+    }
+
+@app.post("/api/voice-query")
+def voice_assistant_query(req: VoiceRequest):
+    q_lower = req.query.lower()
+    lang = req.lang or "en"
+    
+    if "water" in q_lower or "irrigate" in q_lower or "पाणी" in q_lower or "सिंचाई" in q_lower:
+        if lang == "hi":
+            res = f"आपकी {req.crop_name} फसल ({req.crop_age_days} दिन पुरानी) के लिए: यदि वर्षा की संभावना 60% से अधिक है, तो सिंचाई न करें। धूप में सुबह ड्रिप सिंचाई करें।"
+        elif lang == "mr":
+            res = f"तुमच्या {req.crop_name} पिकासाठी ({req.crop_age_days} दिवस): पाऊस पडणार असल्यास पाणी देणे टाळा. उष्णतेमध्ये सकाळी ठिबक सिंचन करा."
+        else:
+            res = f"For your {req.crop_name} crop ({req.crop_age_days} days old on {req.farm_area} Acres): Avoid overhead watering if heavy rain is expected. Use early morning drip irrigation."
+    elif "fertilizer" in q_lower or "khad" in q_lower or "खत" in q_lower or "खाद" in q_lower:
+        if lang == "hi":
+            res = f"आपकी {req.crop_name} फसल के लिए: नीम लेपित यूरिया का उपयोग करें और फास्फोरस के लिए DAP का उपयोग करें।"
+        elif lang == "mr":
+            res = f"तुमच्या {req.crop_name} पिकासाठी: कडुनिंब लेपित युरिया आणि स्फुरदासाठी DAP खत वापरा."
+        else:
+            res = f"For your {req.crop_name} crop ({req.crop_age_days} days old): Apply Neem Coated Urea in split doses. Ensure balanced NPK ratios."
+    else:
+        if lang == "hi":
+            res = f"स्मार्टएग्री एआई कृषि सहायक: अपनी {req.crop_name} फसल की सुरक्षा के लिए दैनिक मौसम अलर्ट और पत्तियों की जांच करें।"
+        elif lang == "mr":
+            res = f"स्मार्टॲग्री एआय कृषी सल्लागार: तुमच्या {req.crop_name} पिकाच्या संरक्षणासाठी हवामान अलर्ट तपासा."
+        else:
+            res = f"SmartAgri AI Assistant: Monitoring your {req.crop_name} crop ({req.crop_age_days} days old). Check daily weather alerts and leaf diagnostics."
+            
+    return {
+        "success": True,
+        "query": req.query,
+        "lang": lang,
+        "response": res
+    }
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="127.0.0.1", port=8000)

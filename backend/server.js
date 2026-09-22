@@ -25,6 +25,11 @@ const schemeRoutes = require('./routes/schemeRoutes');
 const priceRoutes = require('./routes/priceRoutes');
 const notificationRoutes = require('./routes/notificationRoutes');
 const adminRoutes = require('./routes/adminRoutes');
+const weatherRoutes = require('./routes/weatherRoutes');
+const voiceRoutes = require('./routes/voiceRoutes');
+const diseaseWorkflowRoutes = require('./routes/diseaseWorkflowRoutes');
+const inputPriceRoutes = require('./routes/inputPriceRoutes');
+const insuranceRoutes = require('./routes/insuranceRoutes');
 
 // Mount Routes
 app.use('/api/auth', authRoutes);
@@ -36,6 +41,11 @@ app.use('/api/schemes', schemeRoutes);
 app.use('/api/prices', priceRoutes);
 app.use('/api/notifications', notificationRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/weather', weatherRoutes);
+app.use('/api/voice', voiceRoutes);
+app.use('/api/disease-workflow', diseaseWorkflowRoutes);
+app.use('/api/inputs', inputPriceRoutes);
+app.use('/api/insurance', insuranceRoutes);
 
 // Base route
 app.get('/', (req, res) => {

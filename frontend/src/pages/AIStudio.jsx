@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import CropRecommendForm from '../components/AI/CropRecommendForm';
-import DiseaseDetectUpload from '../components/AI/DiseaseDetectUpload';
+import DiseaseWorkflow from '../components/AI/DiseaseWorkflow';
 import ChatBot from '../components/AI/ChatBot';
 import { useLanguage } from '../contexts/LanguageContext';
 import { Cpu, Sprout, Leaf, MessageCircle, HelpCircle, AlertCircle, ArrowRight } from 'lucide-react';
@@ -96,7 +96,7 @@ const AIStudio = () => {
       <div className="pt-4">
         {activeTab === 'crop' && <CropRecommendForm />}
         
-        {activeTab === 'disease' && <DiseaseDetectUpload />}
+        {activeTab === 'disease' && <DiseaseWorkflow />}
         
         {activeTab === 'chatbot' && <ChatBot />}
 
