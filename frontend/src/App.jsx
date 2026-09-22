@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { ThemeProvider } from './contexts/ThemeContext';
+import { LanguageProvider } from './contexts/LanguageContext';
 
 // Components & Layout
 import Navbar from './components/Common/Navbar';
@@ -19,6 +20,14 @@ import Schemes from './pages/Schemes';
 import AIStudio from './pages/AIStudio';
 import Profile from './pages/Profile';
 import AdminPanel from './pages/AdminPanel';
+
+// New Productivity Feature Pages
+import WeatherAlertsPage from './pages/WeatherAlertsPage';
+import VoiceAssistantPage from './pages/VoiceAssistantPage';
+import SatelliteNdviPage from './pages/SatelliteNdviPage';
+import PricePredictorPage from './pages/PricePredictorPage';
+import InputPricesPage from './pages/InputPricesPage';
+import CropInsurancePage from './pages/CropInsurancePage';
 
 // Protected Route Guard
 const ProtectedRoute = ({ children, adminOnly = false }) => {
@@ -54,7 +63,6 @@ const DashboardLayout = ({ children }) => {
     <div className="flex h-screen overflow-hidden bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100 transition-colors duration-300">
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
       <div className="flex-1 flex flex-col overflow-hidden relative">
-        {/* Background grids */}
         <div className="absolute inset-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px] dark:bg-[radial-gradient(#1f2937_1px,transparent_1px)] pointer-events-none opacity-40 z-0"></div>
         
         <Navbar onMenuClick={() => setSidebarOpen(true)} />
@@ -68,8 +76,6 @@ const DashboardLayout = ({ children }) => {
   );
 };
 
-import { LanguageProvider } from './contexts/LanguageContext';
-
 function App() {
   return (
     <LanguageProvider>
@@ -81,13 +87,73 @@ function App() {
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
 
-              {/* Protected Routes */}
+              {/* Main Dashboard & Feature Routes */}
               <Route
                 path="/"
                 element={
                   <ProtectedRoute>
                     <DashboardLayout>
                       <Dashboard />
+                    </DashboardLayout>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/weather-alerts"
+                element={
+                  <ProtectedRoute>
+                    <DashboardLayout>
+                      <WeatherAlertsPage />
+                    </DashboardLayout>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/voice-assistant"
+                element={
+                  <ProtectedRoute>
+                    <DashboardLayout>
+                      <VoiceAssistantPage />
+                    </DashboardLayout>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/satellite-ndvi"
+                element={
+                  <ProtectedRoute>
+                    <DashboardLayout>
+                      <SatelliteNdviPage />
+                    </DashboardLayout>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/price-predictor"
+                element={
+                  <ProtectedRoute>
+                    <DashboardLayout>
+                      <PricePredictorPage />
+                    </DashboardLayout>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/input-prices"
+                element={
+                  <ProtectedRoute>
+                    <DashboardLayout>
+                      <InputPricesPage />
+                    </DashboardLayout>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/crop-insurance"
+                element={
+                  <ProtectedRoute>
+                    <DashboardLayout>
+                      <CropInsurancePage />
                     </DashboardLayout>
                   </ProtectedRoute>
                 }
@@ -162,8 +228,6 @@ function App() {
                   </ProtectedRoute>
                 }
               />
-
-              {/* Admin Exclusive Route */}
               <Route
                 path="/admin"
                 element={

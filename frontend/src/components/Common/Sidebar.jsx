@@ -21,6 +21,12 @@ const Sidebar = ({ isOpen, onClose }) => {
 
   const links = [
     { name: t('menu.dashboard'), path: '/', icon: LayoutDashboard },
+    { name: 'Weather Alerts', path: '/weather-alerts', icon: LayoutDashboard },
+    { name: 'Ask SmartAgri Voice', path: '/voice-assistant', icon: Cpu },
+    { name: 'Satellite NDVI Map', path: '/satellite-ndvi', icon: Map },
+    { name: '30-Day Price Predictor', path: '/price-predictor', icon: TrendingUp },
+    { name: 'Fertilizer & Chemical Prices', path: '/input-prices', icon: HeartPulse },
+    { name: 'PMFBY Insurance Claims', path: '/crop-insurance', icon: Award },
     { name: t('menu.farms'), path: '/farms', icon: Map },
     { name: t('menu.crops'), path: '/crops', icon: Sprout },
     { name: t('menu.soilHealth'), path: '/soil', icon: HeartPulse },
