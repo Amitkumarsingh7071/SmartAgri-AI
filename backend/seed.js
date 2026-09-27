@@ -344,19 +344,67 @@ const seedData = async () => {
       type: 'scheme'
     });
 
-    // Farmer specific reminders
-    await Notification.create({
-      userId: ramesh._id,
-      title: 'Soil Card Analysis Available',
-      message: 'Your soil health card analysis for Farm A has been compiled. You can now download the PDF card.',
-      type: 'general'
+    // 9. Seed Crop Calendar Tasks
+    console.log('Creating Crop Calendar Tasks...');
+    const CropCalendar = require('./models/CropCalendar');
+    await CropCalendar.deleteMany({});
+
+    await CropCalendar.create({
+      user: ramesh._id,
+      crop_name: 'Tomato',
+      plot_name: 'North Sector A',
+      task_title: 'Early Morning Drip Irrigation (30 mins)',
+      category: 'Irrigation',
+      due_date: new Date(),
+      status: 'TODAY',
+      notes: 'Check moisture sensor level before turning on pump.'
     });
 
-    await Notification.create({
-      userId: suresh._id,
-      title: 'Irrigation Advisory',
-      message: 'Anand region temperature is expected to reach 39°C. Increase drip watering duration for Cotton by 15 mins.',
-      type: 'water'
+    await CropCalendar.create({
+      user: ramesh._id,
+      crop_name: 'Tomato',
+      plot_name: 'North Sector A',
+      task_title: 'Foliar Spray Neem Oil (Organic Pest Scouting)',
+      category: 'Scouting',
+      due_date: new Date(Date.now() + 86400000),
+      status: 'UPCOMING',
+      notes: 'Inspect lower leaves for early blight spots.'
+    });
+
+    await CropCalendar.create({
+      user: suresh._id,
+      crop_name: 'Cotton',
+      plot_name: 'East Field B',
+      task_title: 'Top Dressing Neem Coated Urea (55 kg/Acre)',
+      category: 'Nutrient',
+      due_date: new Date(Date.now() + 172800000),
+      status: 'UPCOMING',
+      notes: 'Apply after weeding.'
+    });
+
+    // 10. Seed Farmer Feedback
+    console.log('Creating Farmer Feedback Entries...');
+    const FarmerFeedback = require('./models/FarmerFeedback');
+    await FarmerFeedback.deleteMany({});
+
+    await FarmerFeedback.create({
+      user: ramesh._id,
+      feature_type: 'disease_detection',
+      diagnosis_or_rec: 'Tomato - Early blight',
+      was_helpful: true,
+      diagnosis_correct: 'YES',
+      comments: 'Fungicide treatment recommendation stopped leaf spot spread within 4 days.',
+      crop_name: 'Tomato'
+    });
+
+    await FarmerFeedback.create({
+      user: suresh._id,
+      feature_type: 'crop_recommendation',
+      diagnosis_or_rec: 'Cotton',
+      was_helpful: true,
+      diagnosis_correct: 'YES',
+      comments: 'Recommended cotton variety thrived in black soil.',
+      crop_name: 'Cotton'
     });
 
     console.log('Database Seeding Completed Successfully!');
@@ -368,3 +416,4 @@ const seedData = async () => {
 };
 
 seedData();
+

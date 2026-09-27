@@ -1,6 +1,7 @@
 from fastapi import FastAPI, UploadFile, File, Form, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+import json
 import hashlib
 import random
 import os
@@ -266,6 +267,62 @@ def voice_assistant_query(req: VoiceRequest):
         "response": res
     }
 
+class SmartIrrigationRequest(BaseModel):
+    crop_name: str
+    crop_age_days: Optional[int] = 30
+    soil_type: Optional[str] = "Black Soil"
+    soil_moisture_pct: Optional[float] = 35.0
+    rain_forecast_mm: Optional[float] = 5.0
+    temp_c: Optional[float] = 28.5
+
+@app.get("/api/model-performance")
+def get_model_performance():
+    report_path = os.path.join(os.path.dirname(__file__), "model_performance_report.json")
+    if os.path.exists(report_path):
+        with open(report_path, "r") as f:
+            data = json.load(f)
+            return {"success": True, "data": data}
+            
+    # Fallback default report if json file hasn't been generated
+    from evaluate_models import run_full_audit
+    data = run_full_audit()
+    return {"success": True, "data": data}
+
+@app.post("/api/smart-irrigation")
+def calculate_smart_irrigation(req: SmartIrrigationRequest):
+    rain = req.rain_forecast_mm or 0.0
+    moisture = req.soil_moisture_pct or 40.0
+    temp = req.temp_c or 28.0
+    
+    if rain > 20.0:
+        action = "DO NOT IRRIGATE"
+        urgency = "LOW"
+        reason = f"Heavy rainfall forecast ({rain} mm) expected within 24-48 hours. Irrigation will risk waterlogging."
+    elif moisture < 25.0:
+        action = "IRRIGATE TODAY"
+        urgency = "HIGH"
+        reason = f"Soil moisture ({moisture}%) is below critical threshold (25%). Apply 30 mm drip irrigation early morning."
+    elif moisture < 45.0 and temp > 32.0:
+        action = "IRRIGATE IN EVENING"
+        urgency = "MEDIUM"
+        reason = f"High ambient temperature ({temp}°C) causing high evapotranspiration. Evening drip application recommended."
+    else:
+        action = "SKIP IRRIGATING TODAY"
+        urgency = "LOW"
+        reason = f"Soil moisture level ({moisture}%) is adequate for {req.crop_name} (Age: {req.crop_age_days} days)."
+        
+    return {
+        "success": True,
+        "crop_name": req.crop_name,
+        "action": action,
+        "urgency": urgency,
+        "reasoning": reason,
+        "water_volume_liters_acre": 4500 if action != "DO NOT IRRIGATE" and action != "SKIP IRRIGATING TODAY" else 0,
+        "recommended_method": "Drip Irrigation (Early Morning / Evening)",
+        "disclaimer": "Advisory Note: Always inspect field soil condition directly prior to running pumps."
+    }
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="127.0.0.1", port=8000)
+

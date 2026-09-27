@@ -1,9 +1,9 @@
 import numpy as np
 import pandas as pd
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.preprocessing import StandardScaler
 import random
 
-# Encode crop names
 crop_mapping = {
     'rice': 0, 'paddy': 0,
     'wheat': 1,
@@ -22,12 +22,10 @@ fertilizer_classes = [
     "NPK 19-19-19 (Balanced Fertilizer)"
 ]
 
-# Generate synthetic dataset for fertilizer recommendation training
-# Columns: [crop_idx, N, P, K, pH, moisture, fertilizer_label]
 def generate_fertilizer_dataset():
     data = []
     
-    for _ in range(800):
+    for _ in range(1000):
         crop_idx = random.randint(0, 4)
         N = random.uniform(10, 200)
         P = random.uniform(5, 100)
@@ -35,7 +33,6 @@ def generate_fertilizer_dataset():
         pH = random.uniform(4.5, 8.5)
         moisture = random.uniform(10, 80)
         
-        # Heuristics to label the training data
         if pH < 5.8:
             fert = "Agricultural Lime (Calcium Carbonate)"
         elif pH > 7.8:
@@ -43,7 +40,6 @@ def generate_fertilizer_dataset():
         elif N < 80:
             fert = "Urea (46% Nitrogen)"
         elif P < 35:
-            # SSP is preferred for rice and legumes (contains sulfur)
             if crop_idx == 0 or crop_idx == 4:
                 fert = "Single Super Phosphate (SSP)"
             else:
@@ -58,22 +54,23 @@ def generate_fertilizer_dataset():
     df = pd.DataFrame(data, columns=['crop_idx', 'N', 'P', 'K', 'pH', 'moisture', 'fertilizer'])
     return df
 
-# Train Fertilizer ML Model
-print("Training Fertilizer Recommendation Model...")
+print("Training Fertilizer Recommendation Model with StandardScaler...")
 df = generate_fertilizer_dataset()
-X = df[['crop_idx', 'N', 'P', 'K', 'pH', 'moisture']]
-y = df['fertilizer']
+X_raw = df[['crop_idx', 'N', 'P', 'K', 'pH', 'moisture']].values
+y = df['fertilizer'].values
 
-fertilizer_model = RandomForestClassifier(n_estimators=50, random_state=42)
-fertilizer_model.fit(X, y)
-print("Fertilizer Recommendation Model trained successfully.")
+fert_scaler = StandardScaler()
+X_scaled = fert_scaler.fit_transform(X_raw)
 
-# Map fertilizers to dosage instructions & agronomic explanations
+fertilizer_model = RandomForestClassifier(n_estimators=60, max_depth=10, random_state=42)
+fertilizer_model.fit(X_scaled, y)
+print("Fertilizer Recommendation Model trained successfully with feature scaling.")
+
 fertilizer_details = {
     "Urea (46% Nitrogen)": {
         "quantity": "55 kg/Acre",
         "method": "Top dressing in two split doses during tillering/squaring stages.",
-        "reason": "Nitrogen levels are low. Urea stimulates rapid vegetative growth, tillering, and healthy foliage."
+        "reason": "Nitrogen levels are low. Urea stimulates vegetative growth, tillering, and healthy green foliage."
     },
     "Di-Ammonium Phosphate (DAP)": {
         "quantity": "45 kg/Acre",
@@ -109,17 +106,12 @@ fertilizer_details = {
 
 def get_fertilizer_recommendation(crop_name, N, P, K, pH, moisture):
     crop_lower = crop_name.lower()
-    
-    # Get crop index fallback to 3 (Maize/General)
     crop_idx = crop_mapping.get(crop_lower, 3)
     
-    # Features shape
-    features = np.array([[crop_idx, N, P, K, pH, moisture]])
+    raw_features = np.array([[crop_idx, N, P, K, pH, moisture]])
+    scaled_features = fert_scaler.transform(raw_features)
     
-    # Predict
-    prediction = fertilizer_model.predict(features)[0]
-    
-    # Lookup instructions
+    prediction = fertilizer_model.predict(scaled_features)[0]
     details = fertilizer_details.get(prediction, fertilizer_details["NPK 19-19-19 (Balanced Fertilizer)"])
     
     return {
@@ -127,5 +119,7 @@ def get_fertilizer_recommendation(crop_name, N, P, K, pH, moisture):
         "recommended_fertilizer": prediction,
         "quantity_kg_acre": details["quantity"],
         "application_method": details["method"],
-        "reasoning": f"ML Model Prediction: {details['reason']}"
+        "reasoning": f"Agronomic Model Recommendation: {details['reason']}",
+        "disclaimer": "Safety Advisory: Always cross-verify fertilizer dosage rates with your local Krishi Vigyan Kendra (KVK) officer."
     }
+

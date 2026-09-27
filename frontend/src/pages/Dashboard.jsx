@@ -5,6 +5,10 @@ import SmartAgriVoice from '../components/Voice/SmartAgriVoice';
 import MandiPricesWidget from '../components/Dashboard/MandiPricesWidget';
 import PricePredictorWidget from '../components/Dashboard/PricePredictorWidget';
 import InputPricesWidget from '../components/Dashboard/InputPricesWidget';
+import SmartIrrigationWidget from '../components/Dashboard/SmartIrrigationWidget';
+import CropCalendarWidget from '../components/Dashboard/CropCalendarWidget';
+import ProfitEstimatorWidget from '../components/Dashboard/ProfitEstimatorWidget';
+import BiosecurityHotspotMap from '../components/Maps/BiosecurityHotspotMap';
 import NdviSatelliteAnalyzer from '../components/Maps/NdviSatelliteAnalyzer';
 import InsuranceClaimAssistant from '../components/Insurance/InsuranceClaimAssistant';
 import API from '../services/api';
@@ -205,6 +209,26 @@ const Dashboard = () => {
               ))}
             </div>
           </div>
+        </div>
+      </div>
+
+      {/* Decision Support Widgets Section */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        <div className="lg:col-span-6 space-y-6">
+          <SmartIrrigationWidget />
+        </div>
+        <div className="lg:col-span-6 space-y-6">
+          <CropCalendarWidget />
+        </div>
+      </div>
+
+      {/* Farm Profit Estimator & Biosecurity Regional Hotspot Map */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        <div className="lg:col-span-6">
+          <ProfitEstimatorWidget />
+        </div>
+        <div className="lg:col-span-6">
+          <BiosecurityHotspotMap />
         </div>
       </div>
 

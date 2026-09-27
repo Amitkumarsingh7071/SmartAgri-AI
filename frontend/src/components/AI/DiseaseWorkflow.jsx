@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import API from '../../services/api';
 import { uploadImageAPI } from '../../services/aiApi';
 import { Upload, AlertCircle, AlertTriangle, ShieldCheck, CheckCircle2, FlaskConical, Calendar, ArrowRight, History, Camera, CheckSquare } from 'lucide-react';
+import FarmerFeedbackModal from '../Common/FarmerFeedbackModal';
 
 const DiseaseWorkflow = () => {
   const [file, setFile] = useState(null);
@@ -286,6 +287,12 @@ const DiseaseWorkflow = () => {
                 <Calendar className="h-4 w-4" />
                 <span>Create 7-Day Interactive Treatment Plan</span>
               </button>
+
+              {/* Farmer Feedback Loop */}
+              <FarmerFeedbackModal 
+                cropName="Tomato" 
+                diagnosisOrRec={result.disease_name} 
+              />
             </div>
           ) : (
             <div className="glass-panel p-12 rounded-3xl border border-gray-200/50 dark:border-gray-800/30 flex flex-col justify-center items-center text-center h-full min-h-[350px]">

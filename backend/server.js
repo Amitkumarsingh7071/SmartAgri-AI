@@ -30,6 +30,7 @@ const voiceRoutes = require('./routes/voiceRoutes');
 const diseaseWorkflowRoutes = require('./routes/diseaseWorkflowRoutes');
 const inputPriceRoutes = require('./routes/inputPriceRoutes');
 const insuranceRoutes = require('./routes/insuranceRoutes');
+const farmerFeatureRoutes = require('./routes/farmerFeatureRoutes');
 
 // Mount Routes
 app.use('/api/auth', authRoutes);
@@ -46,6 +47,7 @@ app.use('/api/voice', voiceRoutes);
 app.use('/api/disease-workflow', diseaseWorkflowRoutes);
 app.use('/api/inputs', inputPriceRoutes);
 app.use('/api/insurance', insuranceRoutes);
+app.use('/api/farmer-features', farmerFeatureRoutes);
 
 // Base route
 app.get('/', (req, res) => {
