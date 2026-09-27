@@ -1,5 +1,6 @@
 import React from 'react';
 import WeatherAlertsWidget from '../components/Dashboard/WeatherAlertsWidget';
+import BiosecurityHotspotMap from '../components/Maps/BiosecurityHotspotMap';
 import { CloudRain, Info } from 'lucide-react';
 
 const WeatherAlertsPage = () => {
@@ -10,16 +11,17 @@ const WeatherAlertsPage = () => {
         <div className="flex items-start gap-3 relative z-10">
           <Info className="h-6 w-6 text-blue-200 mt-0.5 flex-shrink-0" />
           <div>
-            <h2 className="text-xl font-extrabold">🌾 Weather-Based Farming Alerts Guide</h2>
+            <h2 className="text-xl font-extrabold">🌾 Weather-Based Farming Alerts & Biosecurity Guide</h2>
             <p className="text-xs text-blue-100 mt-1 leading-relaxed">
-              This intelligence tool monitors temperature, rain probabilities, and humidity against your active plot crops. 
-              <strong> Review the recommended actions below</strong> before irrigating or applying fertilizers to prevent crop damage and loss.
+              This intelligence tool monitors weather telemetry and regional biosecurity hotspots. 
+              <strong> Review the recommended actions below</strong> before irrigating or applying fertilizers to prevent crop damage and disease outbreak.
             </p>
           </div>
         </div>
       </div>
 
       <WeatherAlertsWidget />
+      <BiosecurityHotspotMap />
     </div>
   );
 };
