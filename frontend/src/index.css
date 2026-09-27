@@ -6,45 +6,31 @@
 
 @layer base {
   body {
-    @apply font-sans antialiased bg-gray-50 text-gray-900 transition-colors duration-300;
+    @apply font-sans antialiased bg-slate-50 text-slate-900 transition-colors duration-200;
   }
   
   body.dark {
-    @apply bg-gray-950 text-gray-100;
+    @apply bg-slate-950 text-slate-100;
   }
 }
 
-/* Glassmorphism Styles */
-.glass-panel {
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.05);
+/* Grounded Agricultural Panel System (Replacing Glassmorphism) */
+.agri-card {
+  @apply bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-sm transition-all duration-200;
 }
 
-.dark .glass-panel {
-  background: rgba(17, 24, 39, 0.65);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+.agri-card-hover {
+  @apply hover:border-slate-300 dark:hover:border-slate-700 hover:shadow-sm;
 }
 
-.glass-input {
-  background: rgba(255, 255, 255, 0.5);
-  border: 1px solid rgba(209, 213, 219, 0.8);
-}
-
-.dark .glass-input {
-  background: rgba(31, 41, 55, 0.5);
-  border: 1px solid rgba(75, 85, 99, 0.4);
+.agri-input {
+  @apply w-full text-xs p-2.5 bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:bg-white dark:focus:bg-slate-800 transition;
 }
 
 /* Custom Scrollbars */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
 }
 
 ::-webkit-scrollbar-track {
@@ -57,32 +43,30 @@
 }
 
 .dark ::-webkit-scrollbar-thumb {
-  background: #475569;
+  background: #334155;
 }
 
-/* Leaflet Map Fixes */
+/* Leaflet Map Styling */
 .leaflet-container {
   width: 100%;
   height: 100%;
-  border-radius: 0.75rem;
+  border-radius: 1rem;
   z-index: 1;
 }
 
-/* Glow Effects */
-.glow-green {
-  box-shadow: 0 0 20px rgba(34, 197, 94, 0.15);
+/* Status Badges */
+.badge-healthy {
+  @apply px-2.5 py-0.5 bg-emerald-100 text-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-300 text-[10px] font-bold rounded-full;
 }
 
-.glow-blue {
-  box-shadow: 0 0 20px rgba(59, 130, 246, 0.15);
+.badge-warning {
+  @apply px-2.5 py-0.5 bg-amber-100 text-amber-800 dark:bg-amber-950/40 dark:text-amber-300 text-[10px] font-bold rounded-full;
 }
 
-/* Custom Micro-animations */
-@keyframes pulse-slow {
-  0%, 100% { opacity: 0.8; }
-  50% { opacity: 0.4; }
+.badge-urgent {
+  @apply px-2.5 py-0.5 bg-rose-100 text-rose-800 dark:bg-rose-950/40 dark:text-rose-300 text-[10px] font-bold rounded-full;
 }
 
-.animate-pulse-slow {
-  animation: pulse-slow 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+.badge-info {
+  @apply px-2.5 py-0.5 bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300 text-[10px] font-bold rounded-full;
 }

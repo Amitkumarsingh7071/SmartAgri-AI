@@ -55,22 +55,23 @@ const ProtectedRoute = ({ children, adminOnly = false }) => {
   return children;
 };
 
+import MobileBottomNav from './components/Common/MobileBottomNav';
+
 // Main Layout Wrapper
 const DashboardLayout = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <div className="flex h-screen overflow-hidden bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100 transition-colors duration-300">
+    <div className="flex h-screen overflow-hidden bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100">
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
       <div className="flex-1 flex flex-col overflow-hidden relative">
-        <div className="absolute inset-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px] dark:bg-[radial-gradient(#1f2937_1px,transparent_1px)] pointer-events-none opacity-40 z-0"></div>
-        
         <Navbar onMenuClick={() => setSidebarOpen(true)} />
-        <main className="flex-1 overflow-y-auto p-4 md:p-6 z-10">
+        <main className="flex-1 overflow-y-auto p-4 md:p-6 pb-20 md:pb-6 z-10">
           <div className="max-w-6xl mx-auto w-full">
             {children}
           </div>
         </main>
+        <MobileBottomNav />
       </div>
     </div>
   );
